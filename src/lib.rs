@@ -1,7 +1,9 @@
-use std::ops::{Add, Div, Mul, Neg, Sub};
+use std::ops::{Add, Div, Index, IndexMut, Mul, Neg, Sub};
 
+mod canvas;
 mod colors;
-
+mod matrix;
+mod translation;
 #[derive(Debug)]
 pub struct Tuple {
     x: f64,
@@ -146,6 +148,38 @@ impl Div<f64> for Tuple {
     }
 }
 
+impl Index<u8> for Tuple {
+    type Output = f64;
+
+    fn index(&self, index: u8) -> &Self::Output {
+        match index {
+            0 => &self.x,
+            1 => &self.y,
+            2 => &self.z,
+            _ => &self.w,
+        }
+    }
+}
+
+impl IndexMut<u8> for Tuple {
+    fn index_mut(&mut self, index: u8) -> &mut Self::Output {
+        match index {
+            0 => &mut self.x,
+            1 => &mut self.y,
+            2 => &mut self.z,
+            _ => &mut self.w,
+        }
+    }
+}
+
+// impl Iterator for Tuple {
+//     type Item = f64;
+
+//     fn next(&mut self) -> Option<Self::Item> {
+//         match self.curr
+//     }
+// }
+
 // TODO: delete
 fn new_point(x: f64, y: f64, z: f64) -> Tuple {
     Tuple { x, y, z, w: 1. }
@@ -157,7 +191,7 @@ fn new_vector(x: f64, y: f64, z: f64) -> Tuple {
 
 const EPSILON: f64 = 0.00001;
 
-fn float_equal(a: f64, b: f64) -> bool {
+pub fn float_equal(a: f64, b: f64) -> bool {
     (a - b).abs() < EPSILON
 }
 
